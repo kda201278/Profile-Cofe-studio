@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 пончиков</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --coffee-dark: #1a1a1a;
+            --coffee-brown: #2c2420;
+            --warm-beige: #f5f0eb;
+            --cream: #faf9f7;
+            --accent: #8b6f47;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --glass: rgba(255, 255, 255, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cream);
+            color: var(--text-primary);
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Glassmorphism Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 9999;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 1rem 0;
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 0;
+            background: var(--glass);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.021em;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 10000;
+        }
+
+        .mobile-menu span {
+            width: 18px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1px;
+        }
+
+        /* Hero Section - Apple Style */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+            background: linear-gradient(180deg, var(--cream) 0%, var(--warm-beige) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 111, 71, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-eyebrow {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.015em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s ease 0.1s forwards;
+            background: linear-gradient(180deg, var(--coffee-dark) 0%, var(--coffee-brown) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-visual {
+            font-size: 120px;
+            margin: 2rem 0;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: scaleIn 1s ease 0.3s forwards;
+            filter: drop-shadow(0 20px 40px rgba(139, 111, 71, 0.15));
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.4s forwards;
+        }
+
+        .cta-primary {
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 980px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-primary:hover {
+            background: #7a6240;
+            transform: scale(1.02);
+        }
+
+        .cta-secondary {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 17px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap 0.3s ease;
+        }
+
+        .cta-secondary:hover {
+            gap: 8px;
+        }
+
+        .cta-secondary::after {
+            content: '›';
+            font-size: 20px;
+        }
+
+        /* Sections Common */
+        section {
+            padding: 120px 20px;
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        .section-eyebrow {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.021em;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 21px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.4;
+        }
+
+        /* About Section */
+        .about {
+            background: white;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        .about-text {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .about-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-text p {
+            font-size: 19px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .about-text p.lead {
+            font-size: 24px;
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .about-visual {
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+        }
+
+        .about-visual.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-image {
+            width: 100%;
+            aspect-ratio: 4/5;
+            background: linear-gradient(135deg, var(--warm-beige) 0%, #e8e0d8 100%);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.08),
+                0 0 0 1px rgba(0,0,0,0.04);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.02) 100%);
+        }
+
+        /* Menu Section */
+        .menu {
+            background: var(--cream);
+        }
+
+        .menu-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.04);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .menu-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+        }
+
+        .menu-card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--warm-beige);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+
+        .menu-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.021em;
+        }
+
+        .menu-card p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 24px;
+        }
+
+        .menu-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .price {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .order-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap 0.3s ease;
+        }
+
+        .order-link:hover {
+            gap: 8px;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: white;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            margin-top: 60px;
+        }
+
+        .contact-info h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: var(--cream);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .contact-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .contact-item:hover {
+            background: var(--warm-beige);
+            transform: translateX(4px);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .contact-text h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .contact-text p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .map-container {
+            background: linear-gradient(135deg, var(--warm-beige) 0%, #e8e0d8 100%);
+            border-radius: 24px;
+            height: 100%;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+        }
+
+        .map-pin {
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            margin-bottom: 24px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .map-text {
+            text-align: center;
+        }
+
+        .map-text h4 {
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .map-text p {
+            font-size: 17px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--cream);
+            padding: 40px 20px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .footer-content {
+            max-width: 1024px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 32px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.4s ease;
+            }
+
+            .nav-links.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .nav-links a {
+                font-size: 24px;
+                font-weight: 500;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .mobile-menu.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .mobile-menu.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .mobile-menu.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero-subtitle {
+                font-size: 21px;
+            }
+
+            .hero-visual {
+                font-size: 80px;
+            }
+
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 80px 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        /* Smooth reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">☕️ Два пончика</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#menu">Меню</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+            <div class="mobile-menu" id="mobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-eyebrow">Премиум кофейня</div>
+        <h1>Два пончика<br>и чашка кофе</h1>
+        <p class="hero-subtitle">Искусство кофе в каждой детали. Отборные зёрна, ручная обжарка, идеальный вкус.</p>
+        <div class="hero-visual">☕️</div>
+        <div class="cta-group">
+            <a href="#menu" class="cta-primary">Смотреть меню</a>
+            <a href="#contact" class="cta-secondary">Найти нас</a>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="section-eyebrow">Наша история</div>
+        <h2 class="section-title">Создано с любовью<br>к кофе</h2>
+        <p class="section-subtitle">С 2015 года мы ищем идеальный баланс между традицией и инновацией.</p>
+        
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <p class="lead">Каждое утро начинается с аромата свежемолотого кофе и тёплых пончиков ручной работы.</p>
+                <p>Мы работаем напрямую с фермерами из Эфиопии, Колумбии и Гватемалы, отбирая только specialty-зёрна. Наша обжарка — это результат сотен экспериментов, чтобы раскрыть уникальный характер каждого сорта.</p>
+                <p>Никаких компромиссов. Только чистый вкус, натуральные ингредиенты и забота о каждой детали.</p>
+            </div>
+            <div class="about-visual reveal">
+                <div class="about-image">🍩</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="menu" id="menu">
+        <div class="menu-header">
+            <div class="section-eyebrow">Меню</div>
+            <h2 class="section-title">Фирменные напитки</h2>
+            <p class="section-subtitle">Каждый создан для того, чтобы стать вашим любимым.</p>
+        </div>
+        
+        <div class="menu-grid">
+            <div class="menu-card reveal">
+                <div class="menu-card-icon">☕️</div>
+                <h3>Карамельный Раф</h3>
+                <p>Двойной эспрессо, домашний карамельный соус, ваниль и свежие сливки. Нежность в каждом глотке.</p>
+                <div class="menu-card-footer">
+                    <span class="price">320 ₽</span>
+                    <a href="#" class="order-link">Подробнее ›</a>
+                </div>
+            </div>
+
+            <div class="menu-card reveal">
+                <div class="menu-card-icon">🍵</div>
+                <h3>Матча Латте</h3>
+                <p>Церемониальный японский чай матча высшего сорта с молочной пенкой и лёгкой ноткой ванили.</p>
+                <div class="menu-card-footer">
+                    <span class="price">350 ₽</span>
+                    <a href="#" class="order-link">Подробнее ›</a>
+                </div>
+            </div>
+
+            <div class="menu-card reveal">
+                <div class="menu-card-icon">🧊</div>
+                <h3>Cold Brew</h3>
+                <p>12-часовая холодная экстракция. Шоколадные ноты, ореховое послевкусие, кристальная чистота.</p>
+                <div class="menu-card-footer">
+                    <span class="price">290 ₽</span>
+                    <a href="#" class="order-link">Подробнее ›</a>
+                </div>
+            </div>
+
+            <div class="menu-card reveal">
+                <div class="menu-card-icon">🎃</div>
+                <h3>Пряный Латте</h3>
+                <p>Секретная смесь специй, тыквенное пюре, эспрессо и молочная пена. Осень в каждой чашке.</p>
+                <div class="menu-card-footer">
+                    <span class="price">340 ₽</span>
+                    <a href="#" class="order-link">Подробнее ›</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="section-eyebrow">Локация</div>
+        <h2 class="section-title">Приходите в гости</h2>
+        <p class="section-subtitle">Мы в самом сердце города, рядом с Театральной площадью.</p>
+        
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3>Контакты</h3>
+                
+                <div class="contact-item reveal">
+                    <div class="contact-icon">📍</div>
+                    <div class="contact-text">
+                        <h4>Адрес</h4>
+                        <p>ул. Большая Дмитровка, 15<br>м. Театральная</p>
+                    </div>
+                </div>
+
+                <div class="contact-item reveal">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-text">
+                        <h4>Телефон</h4>
+                        <p>+7 (495) 123-45-67</p>
+                    </div>
+                </div>
+
+                <div class="contact-item reveal">
+                    <div class="contact-icon">🕐</div>
+                    <div class="contact-text">
+                        <h4>Режим работы</h4>
+                        <div class="hours-row">
+                            <span>Пн–Пт</span>
+                            <span>07:30 – 22:00</span>
+                        </div>
+                        <div class="hours-row">
+                            <span>Сб–Вс</span>
+                            <span>08:00 – 23:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-container reveal">
+                <div class="map-pin">📍</div>
+                <div class="map-text">
+                    <h4>Мы на карте</h4>
+                    <p>Москва, центр</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">Telegram</a>
+                <a href="#">ВКонтакте</a>
+            </div>
+            <div class="copyright">© 2024 Два пончика и чашка кофе</div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+        });
+
+        // Intersection Observer for reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal, .menu-card, .contact-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero-visual');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
